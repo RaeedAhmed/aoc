@@ -1,6 +1,4 @@
-from dataclasses import dataclass
 from functools import partial
-from typing import Iterator
 
 from aoc.utils import Session, profiler
 
