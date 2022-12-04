@@ -1,9 +1,8 @@
-import string
-from functools import reduce
+from string import ascii_letters
 
 from aoc.utils import Session, profiler
 
-priority = {char: index + 1 for index, char in enumerate(string.ascii_letters)}
+priority = {char: index + 1 for index, char in enumerate(ascii_letters)}
 
 
 def compartments(rucksack: str) -> tuple[str]:
@@ -12,7 +11,7 @@ def compartments(rucksack: str) -> tuple[str]:
 
 
 def common(compartments: tuple[str]) -> str:
-    return reduce(lambda a, b: set(a).intersection(set(b)), compartments).pop()
+    return set.intersection(*map(set, compartments)).pop()
 
 
 @profiler
