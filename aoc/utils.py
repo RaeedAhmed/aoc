@@ -7,6 +7,12 @@ from urllib import request
 
 
 class Session:
+    def __init__(self) -> None:
+        # Returns filename stem of top level of stack (calling file) e.g -1
+        self.filename = Path(inspect.stack()[-1].filename).stem
+        self.year, self.day = map(int, self.filename.split("-"))
+        self.url = f"https://adventofcode.com/{self.year}/day/{self.day}/input"
+
     @property
     def headers(self) -> dict[str]:
         """
@@ -14,23 +20,6 @@ class Session:
         export AOC_SESSION="session=<token>"
         """
         return {"Cookie": os.environ.get("AOC_SESSION")}
-
-    @property
-    def filename(self) -> str:
-        """Returns filename stem of top level of stack (calling file) e.g -1"""
-        return Path(inspect.stack()[-1].filename).stem
-
-    @property
-    def year(self) -> int:
-        return int(self.filename.split("-")[0])
-
-    @property
-    def day(self) -> int:
-        return int(self.filename.split("-")[1])
-
-    @property
-    def url(self) -> str:
-        return f"https://adventofcode.com/{self.year}/day/{self.day}/input"
 
     def load_data(self) -> str:
         r = request.Request(url=self.url, headers=self.headers)
