@@ -38,33 +38,28 @@ def parse_moves(file: File) -> Iterator[Move]:
     )
 
 
-def move_one(stacks: Stacks, moves: Iterator[Move]) -> Stacks:
+def move(stacks: Stacks, moves: Iterator[Move], chunk: bool) -> Stacks:
     for move in moves:
+        buffer = deque()
         for _ in range(min(move.quantity, len(stacks[move.origin]))):
-            stacks[move.destination].append(stacks[move.origin].pop())
-    return stacks
-
-
-def move_chunk(stacks: Stacks, moves: Iterator[Move]) -> Stacks:
-    for move in moves:
-        chunk = deque()
-        for _ in range(min(move.quantity, len(stacks[move.origin]))):
-            chunk.appendleft(stacks[move.origin].pop())
-        stacks[move.destination].extend(chunk)
+            buffer.append(stacks[move.origin].pop())
+        if chunk:
+            buffer.reverse()
+        stacks[move.destination].extend(buffer)
     return stacks
 
 
 @profiler
-def solution(crane_move: Callable[[Stacks, Iterator[Move]], Stacks], data: str) -> str:
+def solution(chunk: bool, data: str) -> str:
     file = deque(data.splitlines())
     stacks, file = parse_stacks(file)
     moves = parse_moves(file)
-    stacks = crane_move(stacks, moves)
+    stacks = move(stacks, moves, chunk)
     return "".join(stacks[key][-1] for key in sorted(stacks.keys()))
 
 
-part1 = partial(solution, move_one)
-part2 = partial(solution, move_chunk)
+part1 = partial(solution, False)
+part2 = partial(solution, True)
 
 
 def main():
