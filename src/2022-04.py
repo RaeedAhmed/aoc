@@ -8,11 +8,12 @@ from aoc.utils import Session, profiler
 @profiler
 def solution(func: Callable[[set, set], bool], data: str) -> int:
     sections = re.compile(r"(\d+)-(\d+)\,(\d+)-(\d+)")
-    total = 0
-    for row in data.splitlines():
+
+    def condition(row: str) -> bool:
         a, b, c, d = map(int, sections.match(row).groups())
-        total += func(set(range(a, b + 1)), set(range(c, d + 1)))
-    return total
+        return func(set(range(a, b + 1)), set(range(c, d + 1)))
+
+    return sum(map(condition, data.splitlines()))
 
 
 part1 = partial(solution, lambda a, b: a.issuperset(b) or b.issuperset(a))
