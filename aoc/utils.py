@@ -21,11 +21,11 @@ class Session:
         return Path(inspect.stack()[-1].filename).stem
 
     @property
-    def year(self):
+    def year(self) -> int:
         return int(self.filename.split("-")[0])
 
     @property
-    def day(self):
+    def day(self) -> int:
         return int(self.filename.split("-")[1])
 
     @property
@@ -43,8 +43,8 @@ def profiler(func):
         tic = timer()
         value = func(*args, **kwargs)
         toc = timer()
-        elapsed = toc - tic
-        print(f"{func.__name__!r} took {elapsed:.6f} s")
+        elapsed = (toc - tic) * 1_000
+        print(f"{func.__name__!r} took {elapsed:.2f} ms")
         return value
 
     return wrapper_profiler
